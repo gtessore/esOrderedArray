@@ -8,8 +8,19 @@ import java.util.Comparator;            //classe che serve per fare il confronto
 
 public class OrderedArray <T> {
     ArrayList <T> array = null;
-    Comparator <? super T> comparator = null;           //si inizializza a null
+    Comparator <? super T> comparator = null;
 
-    public OrderedArray() {
+    /*
+    Creates an empty Ordered Array
+    takes a Comparator as input
+
+     */
+    public OrderedArray(Comparator <? super T> comparator) throws OrderedArrayException {
+        if(comparator == null) {
+            throw new OrderedArrayException("null comparator received in constructor");
+        }
+        this.array = new ArrayList<>();
+        this.comparator = comparator;
+
     }
 }
