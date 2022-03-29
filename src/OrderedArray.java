@@ -7,8 +7,8 @@ import java.util.Comparator;            //classe che serve per fare il confronto
 * */
 
 public class OrderedArray <T> {
-    private ArrayList <T> array = null;
-    private Comparator <? super T> comparator = null;
+    private ArrayList <T> array;
+    private Comparator <? super T> comparator;
 
     /*
     Creates an empty Ordered Array
@@ -18,12 +18,12 @@ public class OrderedArray <T> {
     @throws: OrderedArrayException
      */
     public OrderedArray(Comparator <? super T> comparator) throws OrderedArrayException {
-        if(comparator == null) {
+        if(comparator == null)
             throw new OrderedArrayException("null comparator received in constructor");
-        }
         this.array = new ArrayList<>();
         this.comparator = comparator;
     }
+
     /*
     @return True iff this ordered array is empty
      */
@@ -42,10 +42,41 @@ public class OrderedArray <T> {
     @return the element at specified index (starting from 0)
     @throws OrderedArrayException
      */
-    public T get(int index) throws OrderedArrayException {
-        if(index<0 || index>=this.size()){
+    public T getElementAt(int index) throws OrderedArrayException {
+        if(index<0 || index>=this.size())
             throw new OrderedArrayException("OrderedArray.get: received index out of bounds (<0 or >size)");
-        }
         return this.array.get(index);
+    }
+
+    //+ non deve essere public, solo i servizi che la libreria
+    //  offre all'esterno, questo lo fa per aiutare sè stessa
+    //+ questo sotto è il commento javadoc, + semplice perchè
+    //  non deve andare a chi usa la lib ma a chi la sviluppa,
+    //  sempre per questo motivo non devo fare controlli "banali"
+    //  tipo controllare che i parametri non siano null perchè
+    //  posso assumere che chi lavora alla lib non sia scemo
+    //+ i metodi interni non devono lanciare eccezioni, perchè
+    //  interrompono il flusso del metodo superiore, e chi usa
+    //  il metodo si trova con un'eccezione nata da un metodo
+    //  che nemmeno può vedere
+
+    //determines the index at which the element has to be added
+    private int getIndexInsert(T element) {
+        int index = 0;
+        while(comparator.compare(this.array.get(index), element) <0)
+            index++;
+        return index-1;
+    }
+
+    /*
+    insert an element maintaining the ordering of the array
+    @param the element to be added
+    @throws OrderedArrayException
+     */
+    public void insert(T element) throws OrderedArrayException {
+        if(element == null)
+            throw new OrderedArrayException("insert: null element cannot be inserted");
+        int index = this.getIndexInsert(element);
+        this.array.add(index, element);
     }
 }
