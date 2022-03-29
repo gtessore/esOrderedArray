@@ -7,8 +7,8 @@ import java.util.Comparator;            //classe che serve per fare il confronto
 * */
 
 public class OrderedArray <T> {
-    private ArrayList <T> array;
-    private Comparator <? super T> comparator;
+    ArrayList <T> array;
+    Comparator <? super T> comparator;
 
     /*
     Creates an empty Ordered Array
@@ -49,23 +49,29 @@ public class OrderedArray <T> {
     }
 
     //+ non deve essere public, solo i servizi che la libreria
-    //  offre all'esterno, questo lo fa per aiutare sè stessa
+    //      offre all'esterno, questo lo fa per aiutare sè stessa
     //+ questo sotto è il commento javadoc, + semplice perchè
-    //  non deve andare a chi usa la lib ma a chi la sviluppa,
-    //  sempre per questo motivo non devo fare controlli "banali"
-    //  tipo controllare che i parametri non siano null perchè
-    //  posso assumere che chi lavora alla lib non sia scemo
+    //      non deve andare a chi usa la lib ma a chi la sviluppa,
+    //      sempre per questo motivo non devo fare controlli "banali"
+    //      tipo controllare che i parametri non siano null perchè
+    //      posso assumere che chi lavora alla lib non sia scemo
     //+ i metodi interni non devono lanciare eccezioni, perchè
-    //  interrompono il flusso del metodo superiore, e chi usa
-    //  il metodo si trova con un'eccezione nata da un metodo
-    //  che nemmeno può vedere
+    //      interrompono il flusso del metodo superiore, e chi usa
+    //      il metodo si trova con un'eccezione nata da un metodo
+    //      che nemmeno può vedere
 
     //determines the index at which the element has to be added
-    private int getIndexInsert(T element) {
+    private int getIndexInsert(T element){
         int index = 0;
-        while(comparator.compare(this.array.get(index), element) <0)
-            index++;
-        return index-1;
+        boolean cont = true;
+        T currEl = null;
+        while((index<(this.array).size())&&cont){
+            currEl = (this.array).get(index);
+            if((this.comparator).compare(element, currEl)<0)
+                cont = false;
+            else index++;
+        }
+        return index;
     }
 
     /*
@@ -73,7 +79,7 @@ public class OrderedArray <T> {
     @param the element to be added
     @throws OrderedArrayException
      */
-    public void insert(T element) throws OrderedArrayException {
+    public void add(T element) throws OrderedArrayException {
         if(element == null)
             throw new OrderedArrayException("insert: null element cannot be inserted");
         int index = this.getIndexInsert(element);

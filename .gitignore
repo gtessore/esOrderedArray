@@ -1,3 +1,5 @@
 /esOrderedArray.iml
 /.idea
-
+*.csv
+*.pdf
+*.docx
